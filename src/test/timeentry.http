@@ -1,0 +1,138 @@
+@baseUrl = http://localhost:8080
+
+### clear DB
+PUT {{baseUrl}}/api/clear-repository
+
+
+### add demo data
+PUT {{baseUrl}}/api/add-demo-data
+
+
+### read all entries
+GET {{baseUrl}}/api/timesheetentries
+
+# expect return code 200 (OK)
+# expect many entries in response body
+#------------------------------------------------
+
+### query entries
+GET {{baseUrl}}/api/timesheetentries?workerId=2&dateFrom=2023-04-18&dateTo=2023-04-20&descriptionPart=accounting
+
+
+
+
+### create a time sheet entry
+POST {{baseUrl}}/api/timesheetentries
+content-type: application/json
+
+{ 
+    "departmentId": 1, 
+    "workerId": 5, 
+    "startDateTime": "2023-04-17T18:00", 
+    "durationInMinutes": 120, 
+    "description": "exam preparation"
+}
+
+# expect return code 201 (Created)
+# expect the same data in the response with a new ID
+#------------------------------------------------
+
+
+### read one entry by ID
+GET {{baseUrl}}/api/timesheetentries/23
+
+# expect in response body the entry with ID=23
+#------------------------------------------------
+
+
+### read one entry by ID - FAILS - no body
+GET {{baseUrl}}/api/timesheetentries/99
+
+# expect return code 404 - Not Found
+#------------------------------------------------
+
+
+### update one entry by ID
+PUT {{baseUrl}}/api/timesheetentries/23
+content-type: application/json
+
+{
+    "startDateTime": "2023-04-17T20:00",
+    "durationInMinutes": 60,
+    "description": "idegbaj"
+}
+
+# expect return code 200 (OK)
+# expect entry with ID=23 in response body
+# changed attributes as above
+#------------------------------------------------
+
+
+### validation error on update one entry by ID
+PUT {{baseUrl}}/api/timesheetentries/1
+content-type: application/json
+
+{}
+
+# {
+#   "type": "request/request-not-valid",
+#   "title": "Not Acceptable",
+#   "status": 406,
+#   "detail": "Validation failed for argument [1]...",
+#   "instance": "/api/timesheetentries/1",
+#   "violations": [
+#     {
+#       "field": "startDateTime",
+#       "message": "must not be null"
+#     },
+#     {
+#       "field": "description",
+#       "message": "must not be blank"
+#     }
+#   ]
+# }
+
+
+### delete not existing entry by ID
+DELETE  {{baseUrl}}/api/timesheetentries/99
+
+# {
+#   "timestamp": "2023-04-17T13:22:06.486+00:00",
+#   "status": 500,
+#   "error": "Internal Server Error",
+#   "path": "/api/timesheetentries/99"
+# }
+#------------------------------------------------
+
+
+### validate entry creation
+POST {{baseUrl}}/api/timesheetentries
+content-type: application/json
+
+{}
+
+# {
+#   "type": "request/request-not-valid"",
+#   "title": "Not Acceptable",
+#   "status": 406,
+#   "detail": "Validation failed for argument [0]...",
+#   "instance": "/api/timesheetentries",
+#   "violations": [
+#     {
+#       "field": "startDateTime",
+#       "message": "must not be null"
+#     },
+#     {
+#       "field": "description",
+#       "message": "must not be blank"
+#     },
+#     {
+#       "field": "departmentId",
+#       "message": "must not be null"
+#     },
+#     {
+#       "field": "workerId",
+#       "message": "must not be null"
+#     }
+#   ]
+# }

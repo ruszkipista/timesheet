@@ -1,0 +1,27 @@
+# start with:
+# docker-compose up
+version: '3.8'
+
+services:
+  app:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mariadb://db/timesheet'
+      SPRING_DATASOURCE_USERNAME: timesheet
+      SPRING_DATASOURCE_PASSWORD: timesheet
+
+  db:
+    image: mariadb
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MARIADB_DATABASE: timesheet
+      MARIADB_USER: timesheet
+      MARIADB_PASSWORD: timesheet
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'

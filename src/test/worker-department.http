@@ -1,0 +1,153 @@
+@baseUrl = http://localhost:8080
+
+### clear DB
+PUT {{baseUrl}}/api/clear-repository HTTP/1.1
+
+
+### create one department
+POST {{baseUrl}}/api/departments HTTP/1.1
+content-type: application/json
+
+{ "name": "Office Administration" }
+
+### create second department
+POST {{baseUrl}}/api/departments HTTP/1.1
+content-type: application/json
+
+{ "name": "Human Resources" }
+
+### create one worker
+POST {{baseUrl}}/api/workers HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Minta Kati",
+    "dateOfBirth": "1995-01-01",
+    "contractType": "FULL_TIME_EMPLOYEE",
+    "departmentId": 1
+}
+
+# expect return code 201 (Created)
+# expect the same worker with a unique ID in response body
+#------------------------------------------------
+
+
+### create another worker
+POST {{baseUrl}}/api/workers HTTP/1.1
+content-type: application/json
+
+{"name": "Pelda Bela", "dateOfBirth": "1990-01-01", "contractType": "PART_TIME_EMPLOYEE", "departmentId": 1}
+
+# expect return code 201 (Created)
+# expect the same worker with a unique ID in response body
+#------------------------------------------------
+
+
+### read all workers
+GET {{baseUrl}}/api/workers HTTP/1.1
+
+# expect return code 200 (OK)
+# expect both workers in response body
+#------------------------------------------------
+
+
+### read one worker by ID
+GET {{baseUrl}}/api/workers/2 HTTP/1.1
+
+# expect in response body the worker with ID=2
+# {
+#   "id": 2,
+#   "name": "Takaros Katinka",
+#   "dateOfBirth": "1985-01-01",
+#   "contractType": "TIME_AND_MATERIAL",
+#   "departmentId": 3,
+#   "departmentName": "IT"
+# }
+#------------------------------------------------
+
+### read one worker by ID - FAILS - no body
+GET {{baseUrl}}/api/workers/99 HTTP/1.1
+
+# expect return code 404 - Not Found
+#------------------------------------------------
+
+
+### update one worker by ID
+PUT {{baseUrl}}/api/workers/2 HTTP/1.1
+content-type: application/json
+
+{"contractType":"FULL_TIME_EMPLOYEE"}
+
+# expect return code 200 (OK)
+# expect worker with ID=2 in response body
+# contract type has been changed to FULL_TIME_EMPLOYEE, the rest of values are unchanged
+#------------------------------------------------
+
+
+### enum validation error on update of one worker by ID
+PUT {{baseUrl}}/api/workers/2 HTTP/1.1
+content-type: application/json
+
+{"contractType":"EMPLOYEE"}
+
+# {
+#   "type": "request/request-not-valid",
+#   "title": "Not Acceptable",
+#   "status": 406,
+#   "detail": "Validation failed for argument [1] ...",
+#   "instance": "/api/workers/2",
+#   "violations": [
+#     {
+#       "field": "contractType",
+#       "message": "must be any of enum class timesheet.model.ContractType"
+#     }
+#   ]
+# }
+
+
+### delete not existing worker by ID
+DELETE  {{baseUrl}}/api/workers/99 HTTP/1.1
+
+# problem response
+# {
+#   "type": "workers/worker-not-found",
+#   "title": "Not Found",
+#   "status": 404,
+#   "detail": "Worker not found with id 99",
+#   "instance": "/api/workers/99"
+# }
+#------------------------------------------------
+
+
+### validate worker creation
+POST {{baseUrl}}/api/workers HTTP/1.1
+content-type: application/json
+
+{}
+
+# {
+#   "type": "workers/request-not-valid",
+#   "title": "Not Acceptable",
+#   "status": 406,
+#   "detail": "Validation failed for argument [0]...",
+#   "instance": "/api/workers",
+#   "violations": [
+#     {
+#       "field": "contractType",
+#       "message": "must not be null"
+#     },
+#     {
+#       "field": "name",
+#       "message": "name can not be blank"
+#     },
+#     {
+#       "field": "dateOfBirth",
+#       "message": "must not be null"
+#     }
+#   ]
+# }
+
+
+### Reassign a worker to another department
+PUT {{baseUrl}}/api/workers/1/assign-to-department/2 HTTP/1.1
+

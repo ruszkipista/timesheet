@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timesheet API</title>
+    <link rel="icon" type="image/x-icon" href="timesheet-icon.jpg">
+</head>
+
+<body>
+    <p>Clear DB and reset ID sequences <button id="clear" type="button" onclick="clearDB(event)">Clear</button></p>
+    <p>Send demo data to DB <button id="send" type="button" onclick="addDemoDataToDB(event)">Send</button></p>
+    <p><a href="/api/workers">Workers in DB</a></p>
+    <p><a href="/api/departments">Departments in DB</a></p>
+    <p><a href="/api/timesheetentries">Timesheet entries in DB</a></p>
+    <p><a href="/swagger-ui/index.html">Swagger UI</a></p>
+
+    <script type="text/javascript">
+        function clearDB(event) {
+            fetch("http://localhost:8080/api/clear-repository", {
+                method: "PUT",
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+        }
+
+        function addDemoDataToDB(event) {
+            fetch("http://localhost:8080/api/add-demo-data", {
+                method: "POST",
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+        }
+    </script>
+</body>
+
+</html>

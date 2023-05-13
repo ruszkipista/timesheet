@@ -1,0 +1,30 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer", "format": "int64"
+        },
+        "name": {
+            "type": "string"
+        },
+        "contractType": {
+            "type": "string"
+        },
+        "dateOfBirth": {
+            "type": "string"
+        },
+        "departmentId": {
+            "anyOf": [
+                {"type": "integer", "format": "int64"},
+                {"type":"null"}
+            ]
+        },
+        "departmentName": {
+            "anyOf": [
+                {"type": "string"},
+                {"type":"null"}
+            ]
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,0 +1,24 @@
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer", "format": "int64"
+        },
+        "departmentId": {
+            "type": "integer", "format": "int64"
+        },
+        "workerId": {
+            "type": "integer", "format": "int64"
+        },
+        "startDateTime": {
+            "type": "string"
+        },
+        "durationInMinutes": {
+            "type": "integer", "format": "int64"
+        },
+        "description": {
+            "type": "string"
+        }
+    },
+    "additionalProperties": false
+}
