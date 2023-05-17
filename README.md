@@ -133,7 +133,7 @@ A `GET /api/timesheetentries` végpont bejegyzések lekérdezéséhez használha
 
 példaul:
 ```C
-/api/timesheetentries?departmentId=3&workerId=2&dateFrom=2023-04-17&dateTo=2023-04-23&descriptionPart=maintenance
+/api/timesheetentries?departmentId=2&workerId=4&dateFrom=2023-04-17&dateTo=2023-04-23&descriptionPart=maintenance
 ```
 ---
 
